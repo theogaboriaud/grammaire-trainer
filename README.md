@@ -1,47 +1,25 @@
 # Atelier Grammaire
-AHHHAHAH
-Petit squelette d'application web autonome pour s'entraîner à reconnaître des
-natures et fonctions grammaticales.
+
+Application web statique prête à être mise en ligne sur GitHub Pages.
 
 ## Lancer l'application
 
-Ouvrir simplement [index.html](./index.html) dans un navigateur.
+Ouvrir simplement [index.html](./index.html) dans un navigateur, ou servir le
+dossier via un petit serveur HTTP local.
 
-## Ce qui est inclus
+## Fonctionnement
 
-- création d'un profil local
-- réinitialisation de la progression
-- activation ou désactivation des natures et fonctions
-- tableau de scores par catégorie
-- entraînement en saisie libre avec autocomplétion
-- page de session pour sortir du profil ou le supprimer
-- mise en avant des catégories actives les plus fragiles
+- une seule page d'entraînement
+- réponse libre avec autocomplétion
+- scores calculés en arrière-plan pour orienter les questions suivantes
+- stockage local au navigateur uniquement
+- notions actives pilotées par [config.js](./config.js)
 
-## Catégories présentes
+## Modifier les notions actives
 
-### Natures
+Éditer le tableau `activeIds` dans [config.js](./config.js).
 
-- nom
-- groupe nominal
-- verbe
-- adjectif
-- adverbe
-- pronom
-- déterminant
-- conjonction de coordination
+## Remarque
 
-### Fonctions
-
-- proposition
-- COD
-- COI
-- Sujet
-- Verbe conjugué
-- Attribut du sujet
-- adjectif épithète
-- complément du verbe
-- complément circonstanciel de temps
-- complément circonstanciel de lieu
-- complément circonstanciel de manière
-- complément du nom
-- proposition subordonnée relative
+La proposition subordonnée relative existe toujours dans la base, mais elle est
+désactivée par défaut dans la configuration initiale.

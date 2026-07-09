@@ -1,5 +1,8 @@
-const STORAGE_KEY = "atelier-grammaire-state-v3";
-const LEGACY_STORAGE_KEYS = ["atelier-grammaire-state-v2"];
+const STORAGE_KEY = "atelier-grammaire-site-state-v1";
+const LEGACY_STORAGE_KEYS = [
+  "atelier-grammaire-state-v2",
+  "atelier-grammaire-state-v3",
+];
 
 const promptLabels = {
   nature: "Nature ?",
@@ -7,42 +10,17 @@ const promptLabels = {
 };
 
 const rawGrammarItems = [
-  {
-    id: "nature:nom",
-    label: "nom",
-    category: "nature",
-    aliases: ["un nom"],
-  },
+  { id: "nature:nom", label: "nom", category: "nature", aliases: ["un nom"] },
   {
     id: "nature:groupe-nominal",
     label: "groupe nominal",
     category: "nature",
     aliases: ["gn", "groupe nominale"],
   },
-  {
-    id: "nature:verbe",
-    label: "verbe",
-    category: "nature",
-    aliases: [],
-  },
-  {
-    id: "nature:adjectif",
-    label: "adjectif",
-    category: "nature",
-    aliases: [],
-  },
-  {
-    id: "nature:adverbe",
-    label: "adverbe",
-    category: "nature",
-    aliases: [],
-  },
-  {
-    id: "nature:pronom",
-    label: "pronom",
-    category: "nature",
-    aliases: [],
-  },
+  { id: "nature:verbe", label: "verbe", category: "nature", aliases: [] },
+  { id: "nature:adjectif", label: "adjectif", category: "nature", aliases: [] },
+  { id: "nature:adverbe", label: "adverbe", category: "nature", aliases: [] },
+  { id: "nature:pronom", label: "pronom", category: "nature", aliases: [] },
   {
     id: "nature:determinant",
     label: "déterminant",
@@ -65,13 +43,21 @@ const rawGrammarItems = [
     id: "fonction:cod",
     label: "COD",
     category: "fonction",
-    aliases: ["complément d'objet direct", "complement d'objet direct", "complement d objet direct"],
+    aliases: [
+      "complément d'objet direct",
+      "complement d'objet direct",
+      "complement d objet direct",
+    ],
   },
   {
     id: "fonction:coi",
     label: "COI",
     category: "fonction",
-    aliases: ["complément d'objet indirect", "complement d'objet indirect", "complement d objet indirect"],
+    aliases: [
+      "complément d'objet indirect",
+      "complement d'objet indirect",
+      "complement d objet indirect",
+    ],
   },
   {
     id: "fonction:sujet",
@@ -95,7 +81,7 @@ const rawGrammarItems = [
     id: "fonction:adjectif-epithete",
     label: "adjectif épithète",
     category: "fonction",
-    aliases: ["adjectif epithete", "épithète", "epithete"],
+    aliases: ["adjectif epithete", "epithete", "épithète"],
   },
   {
     id: "fonction:complement-verbe",
@@ -168,491 +154,71 @@ const grammarItems = rawGrammarItems.map((item) => ({
   searchKeys: uniqueStrings([item.label, ...item.aliases]).map(normalizeText),
 }));
 
-const itemCounts = grammarItems.reduce(
-  (counts, item) => ({
-    ...counts,
-    [item.category]: counts[item.category] + 1,
-  }),
-  { nature: 0, fonction: 0 },
-);
+const exerciseBank = [
+  makeExercise("n1", "nature", "nature:nom", "Le ", "chat", " observe la pluie depuis la fenêtre.", "\"chat\" désigne un être : c'est un nom."),
+  makeExercise("n2", "nature", "nature:groupe-nominal", "", "Le vieux chêne", " résiste encore au vent.", "L'expression entière forme un groupe nominal."),
+  makeExercise("n3", "nature", "nature:verbe", "Les enfants ", "courent", " vers la cour.", "\"courent\" exprime l'action : c'est un verbe."),
+  makeExercise("n4", "nature", "nature:adjectif", "Une écharpe ", "rouge", " sèche près du radiateur.", "\"rouge\" précise le nom \"écharpe\" : c'est un adjectif."),
+  makeExercise("n5", "nature", "nature:adverbe", "Il répond ", "doucement", " pour ne pas réveiller le bébé.", "\"doucement\" précise la manière : c'est un adverbe."),
+  makeExercise("n6", "nature", "nature:pronom", "", "Elle", " connaît déjà la réponse.", "\"Elle\" remplace un groupe nominal : c'est un pronom."),
+  makeExercise("n7", "nature", "nature:determinant", "", "Ces", " fleurs parfument toute la pièce.", "\"Ces\" accompagne le nom \"fleurs\" : c'est un déterminant."),
+  makeExercise("n8", "nature", "nature:conjonction-coordination", "Maya voulait sortir, ", "mais", " la pluie a commencé.", "\"mais\" relie deux éléments : c'est une conjonction de coordination."),
+  makeExercise("n9", "nature", "nature:nom", "Cette ", "maison", " domine toute la vallée.", "\"maison\" nomme une chose : c'est un nom."),
+  makeExercise("n10", "nature", "nature:adverbe", "Le train est ", "déjà", " parti.", "\"déjà\" modifie le sens du verbe : c'est un adverbe."),
+  makeExercise("n11", "nature", "nature:pronom", "Je ne ", "le", " retrouve plus.", "\"le\" remplace ici un groupe nominal : c'est un pronom."),
+  makeExercise("n12", "nature", "nature:determinant", "", "Chaque", " élève relit sa copie.", "\"Chaque\" introduit le nom \"élève\" : c'est un déterminant."),
+  makeExercise("n13", "nature", "nature:verbe", "Vous ", "écoutez", " la consigne avec attention.", "\"écoutez\" est le verbe de la phrase."),
+  makeExercise("n14", "nature", "nature:adjectif", "Un ciel ", "sombre", " annonçait l'orage.", "\"sombre\" qualifie le nom \"ciel\" : c'est un adjectif."),
+  makeExercise("n15", "nature", "nature:groupe-nominal", "", "Une lampe ancienne", " éclaire le salon.", "L'ensemble souligné constitue un groupe nominal."),
+  makeExercise("n16", "nature", "nature:conjonction-coordination", "Tu peux choisir du thé ", "ou", " du chocolat.", "\"ou\" coordonne deux choix : c'est une conjonction de coordination."),
+  makeExercise("f1", "fonction", "fonction:proposition", "", "Que tu viennes demain", " me rassure.", "L'ensemble souligné forme une proposition."),
+  makeExercise("f2", "fonction", "fonction:cod", "Lina mange ", "une pomme", " à la récréation.", "\"une pomme\" reçoit directement l'action du verbe : c'est un COD."),
+  makeExercise("f3", "fonction", "fonction:coi", "Je parle ", "à mon voisin", " chaque matin.", "\"à mon voisin\" complète le verbe avec une préposition : c'est un COI."),
+  makeExercise("f4", "fonction", "fonction:sujet", "", "Le professeur", " explique la consigne.", "\"Le professeur\" fait l'action : c'est le sujet."),
+  makeExercise("f5", "fonction", "fonction:verbe-conjugue", "Nous ", "chantons", " ce refrain ensemble.", "\"chantons\" est le verbe conjugué de la phrase."),
+  makeExercise("f6", "fonction", "fonction:attribut-sujet", "Sami semble ", "fatigué", " après la course.", "\"fatigué\" donne une propriété au sujet grâce à un verbe d'état."),
+  makeExercise("f7", "fonction", "fonction:adjectif-epithete", "J'admire la maison ", "blanche", " au bout de la rue.", "\"blanche\" est directement rattaché au nom : c'est un adjectif épithète."),
+  makeExercise("f8", "fonction", "fonction:complement-verbe", "Il veut ", "partir tôt", " pour éviter les embouteillages.", "\"partir tôt\" complète le verbe \"veut\" : c'est un complément du verbe."),
+  makeExercise("f9", "fonction", "fonction:cod", "Nous relisons ", "la dictée", " avant de rendre la copie.", "\"la dictée\" complète directement le verbe : c'est un COD."),
+  makeExercise("f10", "fonction", "fonction:sujet", "", "Mes amis", " préparent le spectacle.", "\"Mes amis\" est le sujet du verbe \"préparent\"."),
+  makeExercise("f11", "fonction", "fonction:proposition", "", "Qu'il ait réussi", " nous réjouit beaucoup.", "L'ensemble souligné constitue une proposition."),
+  makeExercise("f12", "fonction", "fonction:coi", "Tu répondras ", "à la directrice", " demain matin.", "\"à la directrice\" complète le verbe par une préposition : c'est un COI."),
+  makeExercise("f13", "fonction", "fonction:verbe-conjugue", "Le vent ", "soufflait", " toute la nuit.", "\"soufflait\" est le verbe conjugué de la phrase."),
+  makeExercise("f14", "fonction", "fonction:attribut-sujet", "Cette soupe devient ", "délicieuse", " avec un peu de thym.", "\"délicieuse\" attribue une qualité au sujet."),
+  makeExercise("f15", "fonction", "fonction:adjectif-epithete", "Nous traversons une forêt ", "dense", " et silencieuse.", "\"dense\" précise directement le nom \"forêt\" : c'est un adjectif épithète."),
+  makeExercise("f16", "fonction", "fonction:complement-verbe", "Les enfants aiment ", "jouer dehors", " après l'école.", "\"jouer dehors\" complète le verbe \"aiment\"."),
+  makeExercise("f17", "fonction", "fonction:cc-temps", "Nous partirons ", "demain matin", " si le ciel est clair.", "\"demain matin\" situe l'action dans le temps : c'est un complément circonstanciel de temps."),
+  makeExercise("f18", "fonction", "fonction:cc-temps", "Ils révisent ", "chaque soir", " avant le dîner.", "\"chaque soir\" indique quand a lieu l'action."),
+  makeExercise("f19", "fonction", "fonction:cc-temps", "Le concert commencera ", "à huit heures", ".", "\"à huit heures\" précise le moment de l'action."),
+  makeExercise("f20", "fonction", "fonction:cc-lieu", "Les touristes avancent ", "dans la vieille ville", " sans se presser.", "\"dans la vieille ville\" indique où se déroule l'action."),
+  makeExercise("f21", "fonction", "fonction:cc-lieu", "Le chien dort ", "près du feu", " depuis une heure.", "\"près du feu\" indique le lieu."),
+  makeExercise("f22", "fonction", "fonction:cc-lieu", "Nous avons pique-niqué ", "au bord du lac", " hier.", "\"au bord du lac\" précise le lieu."),
+  makeExercise("f23", "fonction", "fonction:cc-maniere", "Elle referme la porte ", "avec précaution", " pour ne pas faire de bruit.", "\"avec précaution\" indique la manière."),
+  makeExercise("f24", "fonction", "fonction:cc-maniere", "Le coureur termine la course ", "sans faiblir", ".", "\"sans faiblir\" précise la manière dont l'action se réalise."),
+  makeExercise("f25", "fonction", "fonction:cc-maniere", "Les élèves écoutent ", "en silence", " la lecture.", "\"en silence\" indique la manière."),
+  makeExercise("f26", "fonction", "fonction:complement-nom", "J'ai feuilleté un livre ", "de contes africains", " toute l'après-midi.", "\"de contes africains\" complète le nom \"livre\"."),
+  makeExercise("f27", "fonction", "fonction:complement-nom", "La maison ", "au toit rouge", " domine le village.", "\"au toit rouge\" complète le nom \"maison\"."),
+  makeExercise("f28", "fonction", "fonction:complement-nom", "Un collier ", "en argent", " brillait sous la vitrine.", "\"en argent\" complète le nom \"collier\"."),
+  makeExercise("f29", "fonction", "fonction:proposition-subordonnee-relative", "Le roman ", "que tu m'as prêté", " me passionne.", "\"que tu m'as prêté\" complète le nom \"roman\" : c'est une proposition subordonnée relative."),
+  makeExercise("f30", "fonction", "fonction:proposition-subordonnee-relative", "La ville ", "où je suis né", " attire encore ma famille.", "\"où je suis né\" est une proposition subordonnée relative."),
+  makeExercise("f31", "fonction", "fonction:proposition-subordonnee-relative", "Les enfants ", "qui jouent dans la cour", " attendent la cloche.", "\"qui jouent dans la cour\" complète le nom \"enfants\"."),
+  makeExercise("f32", "fonction", "fonction:cod", "Le jardinier taille ", "les rosiers", " avec soin.", "\"les rosiers\" est le COD du verbe \"taille\"."),
+  makeExercise("f33", "fonction", "fonction:coi", "Elle pense souvent ", "à ses grands-parents", ".", "\"à ses grands-parents\" est un COI."),
+  makeExercise("f34", "fonction", "fonction:sujet", "", "La mer agitée", " impressionne les visiteurs.", "\"La mer agitée\" accomplit l'action : c'est le sujet."),
+  makeExercise("f35", "fonction", "fonction:proposition", "", "Que vous soyez ici", " change tout.", "L'ensemble souligné est une proposition."),
+];
 
+const appRoot = document.getElementById("training-app");
 const answerLookup = new Map();
+let autoAdvanceHandle = null;
+
 for (const item of grammarItems) {
   for (const key of item.searchKeys) {
-    answerLookup.set(key, item.id);
+    answerLookup.set(`${item.category}:${key}`, item.id);
   }
 }
 
-const exerciseBank = [
-  makeExercise(
-    "n1",
-    "nature",
-    "nature:nom",
-    "Le ",
-    "chat",
-    " observe la pluie depuis la fenêtre.",
-    "\"chat\" désigne un être : c'est un nom.",
-  ),
-  makeExercise(
-    "n2",
-    "nature",
-    "nature:groupe-nominal",
-    "",
-    "Le vieux chêne",
-    " résiste encore au vent.",
-    "L'expression entière forme un groupe nominal.",
-  ),
-  makeExercise(
-    "n3",
-    "nature",
-    "nature:verbe",
-    "Les enfants ",
-    "courent",
-    " vers la cour.",
-    "\"courent\" exprime l'action : c'est un verbe.",
-  ),
-  makeExercise(
-    "n4",
-    "nature",
-    "nature:adjectif",
-    "Une écharpe ",
-    "rouge",
-    " sèche près du radiateur.",
-    "\"rouge\" précise le nom \"écharpe\" : c'est un adjectif.",
-  ),
-  makeExercise(
-    "n5",
-    "nature",
-    "nature:adverbe",
-    "Il répond ",
-    "doucement",
-    " pour ne pas réveiller le bébé.",
-    "\"doucement\" précise la manière : c'est un adverbe.",
-  ),
-  makeExercise(
-    "n6",
-    "nature",
-    "nature:pronom",
-    "",
-    "Elle",
-    " connaît déjà la réponse.",
-    "\"Elle\" remplace un groupe nominal : c'est un pronom.",
-  ),
-  makeExercise(
-    "n7",
-    "nature",
-    "nature:determinant",
-    "",
-    "Ces",
-    " fleurs parfument toute la pièce.",
-    "\"Ces\" accompagne le nom \"fleurs\" : c'est un déterminant.",
-  ),
-  makeExercise(
-    "n8",
-    "nature",
-    "nature:conjonction-coordination",
-    "Maya voulait sortir, ",
-    "mais",
-    " la pluie a commencé.",
-    "\"mais\" relie deux éléments : c'est une conjonction de coordination.",
-  ),
-  makeExercise(
-    "n9",
-    "nature",
-    "nature:nom",
-    "Cette ",
-    "maison",
-    " domine toute la vallée.",
-    "\"maison\" nomme une chose : c'est un nom.",
-  ),
-  makeExercise(
-    "n10",
-    "nature",
-    "nature:adverbe",
-    "Le train est ",
-    "déjà",
-    " parti.",
-    "\"déjà\" modifie le sens du verbe : c'est un adverbe.",
-  ),
-  makeExercise(
-    "n11",
-    "nature",
-    "nature:pronom",
-    "Je ne ",
-    "le",
-    " retrouve plus.",
-    "\"le\" remplace ici un groupe nominal : c'est un pronom.",
-  ),
-  makeExercise(
-    "n12",
-    "nature",
-    "nature:determinant",
-    "",
-    "Chaque",
-    " élève relit sa copie.",
-    "\"Chaque\" introduit le nom \"élève\" : c'est un déterminant.",
-  ),
-  makeExercise(
-    "n13",
-    "nature",
-    "nature:verbe",
-    "Vous ",
-    "écoutez",
-    " la consigne avec attention.",
-    "\"écoutez\" est le verbe de la phrase.",
-  ),
-  makeExercise(
-    "n14",
-    "nature",
-    "nature:adjectif",
-    "Un ciel ",
-    "sombre",
-    " annonçait l'orage.",
-    "\"sombre\" qualifie le nom \"ciel\" : c'est un adjectif.",
-  ),
-  makeExercise(
-    "n15",
-    "nature",
-    "nature:groupe-nominal",
-    "",
-    "Une lampe ancienne",
-    " éclaire le salon.",
-    "L'ensemble souligné constitue un groupe nominal.",
-  ),
-  makeExercise(
-    "n16",
-    "nature",
-    "nature:conjonction-coordination",
-    "Tu peux choisir du thé ",
-    "ou",
-    " du chocolat.",
-    "\"ou\" coordonne deux choix : c'est une conjonction de coordination.",
-  ),
-  makeExercise(
-    "f1",
-    "fonction",
-    "fonction:proposition",
-    "",
-    "Que tu viennes demain",
-    " me rassure.",
-    "L'ensemble souligné forme une proposition.",
-  ),
-  makeExercise(
-    "f2",
-    "fonction",
-    "fonction:cod",
-    "Lina mange ",
-    "une pomme",
-    " à la récréation.",
-    "\"une pomme\" reçoit directement l'action du verbe : c'est un COD.",
-  ),
-  makeExercise(
-    "f3",
-    "fonction",
-    "fonction:coi",
-    "Je parle ",
-    "à mon voisin",
-    " chaque matin.",
-    "\"à mon voisin\" complète le verbe avec une préposition : c'est un COI.",
-  ),
-  makeExercise(
-    "f4",
-    "fonction",
-    "fonction:sujet",
-    "",
-    "Le professeur",
-    " explique la consigne.",
-    "\"Le professeur\" fait l'action : c'est le sujet.",
-  ),
-  makeExercise(
-    "f5",
-    "fonction",
-    "fonction:verbe-conjugue",
-    "Nous ",
-    "chantons",
-    " ce refrain ensemble.",
-    "\"chantons\" est le verbe conjugué de la phrase.",
-  ),
-  makeExercise(
-    "f6",
-    "fonction",
-    "fonction:attribut-sujet",
-    "Sami semble ",
-    "fatigué",
-    " après la course.",
-    "\"fatigué\" donne une propriété au sujet grâce à un verbe d'état.",
-  ),
-  makeExercise(
-    "f7",
-    "fonction",
-    "fonction:adjectif-epithete",
-    "J'admire la maison ",
-    "blanche",
-    " au bout de la rue.",
-    "\"blanche\" est directement rattaché au nom : c'est un adjectif épithète.",
-  ),
-  makeExercise(
-    "f8",
-    "fonction",
-    "fonction:complement-verbe",
-    "Il veut ",
-    "partir tôt",
-    " pour éviter les embouteillages.",
-    "\"partir tôt\" complète le verbe \"veut\" : c'est un complément du verbe.",
-  ),
-  makeExercise(
-    "f9",
-    "fonction",
-    "fonction:cod",
-    "Nous relisons ",
-    "la dictée",
-    " avant de rendre la copie.",
-    "\"la dictée\" complète directement le verbe : c'est un COD.",
-  ),
-  makeExercise(
-    "f10",
-    "fonction",
-    "fonction:sujet",
-    "",
-    "Mes amis",
-    " préparent le spectacle.",
-    "\"Mes amis\" est le sujet du verbe \"préparent\".",
-  ),
-  makeExercise(
-    "f11",
-    "fonction",
-    "fonction:proposition",
-    "",
-    "Qu'il ait réussi",
-    " nous réjouit beaucoup.",
-    "L'ensemble souligné constitue une proposition.",
-  ),
-  makeExercise(
-    "f12",
-    "fonction",
-    "fonction:coi",
-    "Tu répondras ",
-    "à la directrice",
-    " demain matin.",
-    "\"à la directrice\" complète le verbe par une préposition : c'est un COI.",
-  ),
-  makeExercise(
-    "f13",
-    "fonction",
-    "fonction:verbe-conjugue",
-    "Le vent ",
-    "soufflait",
-    " toute la nuit.",
-    "\"soufflait\" est le verbe conjugué de la phrase.",
-  ),
-  makeExercise(
-    "f14",
-    "fonction",
-    "fonction:attribut-sujet",
-    "Cette soupe devient ",
-    "délicieuse",
-    " avec un peu de thym.",
-    "\"délicieuse\" attribue une qualité au sujet.",
-  ),
-  makeExercise(
-    "f15",
-    "fonction",
-    "fonction:adjectif-epithete",
-    "Nous traversons une forêt ",
-    "dense",
-    " et silencieuse.",
-    "\"dense\" précise directement le nom \"forêt\" : c'est un adjectif épithète.",
-  ),
-  makeExercise(
-    "f16",
-    "fonction",
-    "fonction:complement-verbe",
-    "Les enfants aiment ",
-    "jouer dehors",
-    " après l'école.",
-    "\"jouer dehors\" complète le verbe \"aiment\".",
-  ),
-  makeExercise(
-    "f17",
-    "fonction",
-    "fonction:cc-temps",
-    "Nous partirons ",
-    "demain matin",
-    " si le ciel est clair.",
-    "\"demain matin\" situe l'action dans le temps : c'est un complément circonstanciel de temps.",
-  ),
-  makeExercise(
-    "f18",
-    "fonction",
-    "fonction:cc-temps",
-    "Ils révisent ",
-    "chaque soir",
-    " avant le dîner.",
-    "\"chaque soir\" indique quand a lieu l'action.",
-  ),
-  makeExercise(
-    "f19",
-    "fonction",
-    "fonction:cc-temps",
-    "Le concert commencera ",
-    "à huit heures",
-    ".",
-    "\"à huit heures\" précise le moment de l'action.",
-  ),
-  makeExercise(
-    "f20",
-    "fonction",
-    "fonction:cc-lieu",
-    "Les touristes avancent ",
-    "dans la vieille ville",
-    " sans se presser.",
-    "\"dans la vieille ville\" indique où se déroule l'action.",
-  ),
-  makeExercise(
-    "f21",
-    "fonction",
-    "fonction:cc-lieu",
-    "Le chien dort ",
-    "près du feu",
-    " depuis une heure.",
-    "\"près du feu\" indique le lieu.",
-  ),
-  makeExercise(
-    "f22",
-    "fonction",
-    "fonction:cc-lieu",
-    "Nous avons pique-niqué ",
-    "au bord du lac",
-    " hier.",
-    "\"au bord du lac\" précise le lieu.",
-  ),
-  makeExercise(
-    "f23",
-    "fonction",
-    "fonction:cc-maniere",
-    "Elle referme la porte ",
-    "avec précaution",
-    " pour ne pas faire de bruit.",
-    "\"avec précaution\" indique la manière.",
-  ),
-  makeExercise(
-    "f24",
-    "fonction",
-    "fonction:cc-maniere",
-    "Le coureur termine la course ",
-    "sans faiblir",
-    ".",
-    "\"sans faiblir\" précise la manière dont l'action se réalise.",
-  ),
-  makeExercise(
-    "f25",
-    "fonction",
-    "fonction:cc-maniere",
-    "Les élèves écoutent ",
-    "en silence",
-    " la lecture.",
-    "\"en silence\" indique la manière.",
-  ),
-  makeExercise(
-    "f26",
-    "fonction",
-    "fonction:complement-nom",
-    "J'ai feuilleté un livre ",
-    "de contes africains",
-    " toute l'après-midi.",
-    "\"de contes africains\" complète le nom \"livre\".",
-  ),
-  makeExercise(
-    "f27",
-    "fonction",
-    "fonction:complement-nom",
-    "La maison ",
-    "au toit rouge",
-    " domine le village.",
-    "\"au toit rouge\" complète le nom \"maison\".",
-  ),
-  makeExercise(
-    "f28",
-    "fonction",
-    "fonction:complement-nom",
-    "Un collier ",
-    "en argent",
-    " brillait sous la vitrine.",
-    "\"en argent\" complète le nom \"collier\".",
-  ),
-  makeExercise(
-    "f29",
-    "fonction",
-    "fonction:proposition-subordonnee-relative",
-    "Le roman ",
-    "que tu m'as prêté",
-    " me passionne.",
-    "\"que tu m'as prêté\" complète le nom \"roman\" : c'est une proposition subordonnée relative.",
-  ),
-  makeExercise(
-    "f30",
-    "fonction",
-    "fonction:proposition-subordonnee-relative",
-    "La ville ",
-    "où je suis né",
-    " attire encore ma famille.",
-    "\"où je suis né\" est une proposition subordonnée relative.",
-  ),
-  makeExercise(
-    "f31",
-    "fonction",
-    "fonction:proposition-subordonnee-relative",
-    "Les enfants ",
-    "qui jouent dans la cour",
-    " attendent la cloche.",
-    "\"qui jouent dans la cour\" complète le nom \"enfants\".",
-  ),
-  makeExercise(
-    "f32",
-    "fonction",
-    "fonction:cod",
-    "Le jardinier taille ",
-    "les rosiers",
-    " avec soin.",
-    "\"les rosiers\" est le COD du verbe \"taille\".",
-  ),
-  makeExercise(
-    "f33",
-    "fonction",
-    "fonction:coi",
-    "Elle pense souvent ",
-    "à ses grands-parents",
-    ".",
-    "\"à ses grands-parents\" est un COI.",
-  ),
-  makeExercise(
-    "f34",
-    "fonction",
-    "fonction:sujet",
-    "",
-    "La mer agitée",
-    " impressionne les visiteurs.",
-    "\"La mer agitée\" accomplit l'action : c'est le sujet.",
-  ),
-  makeExercise(
-    "f35",
-    "fonction",
-    "fonction:proposition",
-    "",
-    "Que vous soyez ici",
-    " change tout.",
-    "L'ensemble souligné est une proposition.",
-  ),
-];
-
-const dom = {
-  welcomePanel: document.getElementById("welcome-panel"),
-  profileView: document.getElementById("profile-view"),
-  trainingView: document.getElementById("training-view"),
-  sessionView: document.getElementById("session-view"),
-  navButtons: Array.from(document.querySelectorAll("[data-nav]")),
-};
-
+const configuredActiveIds = getConfiguredActiveIds();
 let state = loadState();
 
 function makeExercise(id, promptType, correctId, before, target, after, explanation) {
@@ -674,8 +240,30 @@ function normalizeText(value) {
     .replace(/\s+/g, " ");
 }
 
-function getItemsByCategory(category) {
-  return grammarItems.filter((item) => item.category === category);
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function getConfiguredActiveIds() {
+  const fallbackIds = grammarItems
+    .map((item) => item.id)
+    .filter((id) => id !== "fonction:proposition-subordonnee-relative");
+  const candidate = window.grammarTrainerConfig?.activeIds;
+
+  if (!Array.isArray(candidate)) {
+    return fallbackIds;
+  }
+
+  const sanitized = candidate.filter((id) =>
+    grammarItems.some((item) => item.id === id),
+  );
+
+  return sanitized.length ? sanitized : fallbackIds;
 }
 
 function buildDefaultStats() {
@@ -687,67 +275,40 @@ function buildDefaultStats() {
   );
 }
 
-function buildDefaultSession() {
-  return {
-    currentQuestion: null,
-    lastResult: null,
-    focusBoosts: {},
-    answeredCount: 0,
-    answerDraft: "",
-    inputError: "",
-  };
-}
-
 function buildDefaultState() {
   return {
-    profileName: "",
-    isProfileOpen: false,
-    activeIds: grammarItems.map((item) => item.id),
     stats: buildDefaultStats(),
-    view: "profile",
-    session: buildDefaultSession(),
+    currentQuestion: null,
+    lastResult: null,
+    answerDraft: "",
+    inputError: "",
+    answeredCount: 0,
+    focusBoosts: {},
   };
 }
 
 function loadState() {
   const base = buildDefaultState();
+
   try {
     const raw =
       localStorage.getItem(STORAGE_KEY) ||
       LEGACY_STORAGE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
+
     if (!raw) {
       return base;
     }
 
     const parsed = JSON.parse(raw);
-    const profileName =
-      typeof parsed.profileName === "string" ? parsed.profileName : "";
-    const activeIds = Array.isArray(parsed.activeIds)
-      ? parsed.activeIds.filter((id) => grammarItems.some((item) => item.id === id))
-      : base.activeIds;
-    const isProfileOpen = profileName
-      ? typeof parsed.isProfileOpen === "boolean"
-        ? parsed.isProfileOpen
-        : true
-      : false;
-    const allowedViews = ["profile", "training", "session"];
-    const parsedView = allowedViews.includes(parsed.view) ? parsed.view : "profile";
-    const nextView = profileName && !isProfileOpen ? "session" : parsedView;
-
     return {
       ...base,
-      profileName,
-      isProfileOpen,
-      activeIds: activeIds.length ? activeIds : [],
       stats: {
         ...base.stats,
         ...sanitizeStats(parsed.stats),
       },
-      view: nextView,
-      session: buildDefaultSession(),
     };
   } catch (error) {
-    console.warn("Impossible de relire l'état sauvegardé.", error);
+    console.warn("Impossible de relire les scores locaux.", error);
     return base;
   }
 }
@@ -773,61 +334,28 @@ function sanitizeStats(candidate) {
 }
 
 function persistState() {
-  const stored = {
-    profileName: state.profileName,
-    isProfileOpen: state.isProfileOpen,
-    activeIds: state.activeIds,
-    stats: state.stats,
-    view: state.view,
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      stats: state.stats,
+    }),
+  );
   LEGACY_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
-}
-
-function hasStoredProfile() {
-  return Boolean(state.profileName);
-}
-
-function hasOpenProfile() {
-  return hasStoredProfile() && state.isProfileOpen;
-}
-
-function getResolvedView() {
-  if (!hasStoredProfile()) {
-    return "profile";
-  }
-
-  if (!hasOpenProfile()) {
-    return "session";
-  }
-
-  return state.view;
-}
-
-function canAccessView(view) {
-  if (view === "profile") {
-    return hasOpenProfile() || !hasStoredProfile();
-  }
-
-  if (view === "training") {
-    return hasOpenProfile();
-  }
-
-  if (view === "session") {
-    return hasStoredProfile();
-  }
-
-  return false;
 }
 
 function getItem(itemId) {
   return grammarItems.find((item) => item.id === itemId);
 }
 
-function sumStats(field) {
-  return grammarItems.reduce(
-    (total, item) => total + (state.stats[item.id]?.[field] || 0),
-    0,
+function getActiveItemsByCategory(category) {
+  return grammarItems.filter(
+    (item) => item.category === category && configuredActiveIds.includes(item.id),
+  );
+}
+
+function getActiveExercises() {
+  return exerciseBank.filter((exercise) =>
+    configuredActiveIds.includes(exercise.correctId),
   );
 }
 
@@ -848,29 +376,16 @@ function getWeakness(itemId) {
   const baseline = total === 0 ? 2.4 : 1 + (100 - getMastery(itemId)) / 25;
   const fnWeight = stats.falseNegatives * 0.45;
   const fpWeight = stats.falsePositives * 0.28;
-  const focusBoost = state.session.focusBoosts[itemId] || 0;
+  const focusBoost = state.focusBoosts[itemId] || 0;
 
   return baseline + fnWeight + fpWeight + focusBoost;
-}
-
-function getWeakestActiveItems(limit = 3) {
-  return grammarItems
-    .filter((item) => state.activeIds.includes(item.id))
-    .sort((left, right) => {
-      const delta = getWeakness(right.id) - getWeakness(left.id);
-      if (delta !== 0) {
-        return delta;
-      }
-      return getMastery(left.id) - getMastery(right.id);
-    })
-    .slice(0, limit);
 }
 
 function pickWeighted(candidates) {
   const totalWeight = candidates.reduce((sum, candidate) => sum + candidate.weight, 0);
   const threshold = Math.random() * totalWeight;
-
   let cursor = 0;
+
   for (const candidate of candidates) {
     cursor += candidate.weight;
     if (cursor >= threshold) {
@@ -882,10 +397,7 @@ function pickWeighted(candidates) {
 }
 
 function buildQuestion(excludedExerciseId = null) {
-  const activeExercises = exerciseBank.filter((exercise) =>
-    state.activeIds.includes(exercise.correctId),
-  );
-
+  const activeExercises = getActiveExercises();
   if (!activeExercises.length) {
     return null;
   }
@@ -903,132 +415,37 @@ function buildQuestion(excludedExerciseId = null) {
   );
 }
 
-function buildPreviewQueue(currentId) {
-  const previews = [];
-  let previousId = currentId;
-
-  while (previews.length < 3) {
-    const nextQuestion = buildQuestion(previousId);
-    if (!nextQuestion) {
-      break;
-    }
-    previews.push(nextQuestion);
-    previousId = nextQuestion.id;
+function ensureQuestion() {
+  if (state.currentQuestion || !getActiveExercises().length) {
+    return;
   }
 
-  return previews;
+  state.currentQuestion = buildQuestion();
 }
 
 function decayFocusBoosts() {
-  for (const [itemId, boost] of Object.entries(state.session.focusBoosts)) {
+  for (const [itemId, boost] of Object.entries(state.focusBoosts)) {
     const nextBoost = Math.max(0, boost - 0.35);
     if (nextBoost === 0) {
-      delete state.session.focusBoosts[itemId];
+      delete state.focusBoosts[itemId];
     } else {
-      state.session.focusBoosts[itemId] = nextBoost;
+      state.focusBoosts[itemId] = nextBoost;
     }
   }
 }
 
-function ensureQuestion() {
-  if (!hasOpenProfile() || state.session.currentQuestion || !state.activeIds.length) {
-    return;
+function clearAutoAdvance() {
+  if (autoAdvanceHandle) {
+    window.clearTimeout(autoAdvanceHandle);
+    autoAdvanceHandle = null;
   }
-  state.session.currentQuestion = buildQuestion();
 }
 
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}
-
-function switchView(view) {
-  if (!canAccessView(view)) {
-    return;
-  }
-  state.view = view;
-  if (view === "training") {
-    ensureQuestion();
-  }
-  persistState();
-  render();
-  scrollToTop();
-}
-
-function createProfile(profileName) {
-  state = buildDefaultState();
-  state.profileName = profileName.trim();
-  state.isProfileOpen = true;
-  state.view = "profile";
-  persistState();
-  render();
-  scrollToTop();
-}
-
-function enterProfile() {
-  if (!hasStoredProfile()) {
-    return;
-  }
-
-  state.isProfileOpen = true;
-  state.view = "profile";
-  persistState();
-  render();
-  scrollToTop();
-}
-
-function exitProfile() {
-  if (!hasOpenProfile()) {
-    return;
-  }
-
-  state.isProfileOpen = false;
-  state.view = "session";
-  state.session = buildDefaultSession();
-  persistState();
-  render();
-  scrollToTop();
-}
-
-function deleteProfile() {
-  state = buildDefaultState();
-  [STORAGE_KEY, ...LEGACY_STORAGE_KEYS].forEach((key) =>
-    localStorage.removeItem(key),
-  );
-  render();
-  scrollToTop();
-}
-
-function resetProfile() {
-  state.stats = buildDefaultStats();
-  state.activeIds = grammarItems.map((item) => item.id);
-  state.session = buildDefaultSession();
-  persistState();
-  render();
-  scrollToTop();
-}
-
-function toggleActive(itemId) {
-  if (state.activeIds.includes(itemId)) {
-    state.activeIds = state.activeIds.filter((activeId) => activeId !== itemId);
-  } else {
-    state.activeIds = [...state.activeIds, itemId];
-  }
-
-  if (
-    state.session.currentQuestion &&
-    !state.activeIds.includes(state.session.currentQuestion.correctId)
-  ) {
-    state.session.currentQuestion = null;
-    state.session.lastResult = null;
-    state.session.answerDraft = "";
-    state.session.inputError = "";
-  }
-
-  persistState();
-  render();
+function scheduleNextQuestion() {
+  clearAutoAdvance();
+  autoAdvanceHandle = window.setTimeout(() => {
+    goToNextQuestion();
+  }, 2200);
 }
 
 function resolveAnswerInput(rawValue, promptType) {
@@ -1037,82 +454,29 @@ function resolveAnswerInput(rawValue, promptType) {
     return null;
   }
 
-  const exactMatchId = answerLookup.get(normalized);
-  if (exactMatchId) {
-    return getItem(exactMatchId);
-  }
-
-  const sameCategoryMatches = grammarItems.filter(
-    (item) =>
-      item.category === promptType &&
-      item.searchKeys.some((key) => key.startsWith(normalized)),
+  const activeItems = getActiveItemsByCategory(promptType);
+  const exactMatch = activeItems.find((item) =>
+    item.searchKeys.includes(normalized),
   );
 
-  if (sameCategoryMatches.length === 1 && normalized.length >= 3) {
-    return sameCategoryMatches[0];
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  const lookupId = answerLookup.get(`${promptType}:${normalized}`);
+  if (lookupId && configuredActiveIds.includes(lookupId)) {
+    return getItem(lookupId);
+  }
+
+  const prefixMatches = activeItems.filter((item) =>
+    item.searchKeys.some((key) => key.startsWith(normalized)),
+  );
+
+  if (prefixMatches.length === 1 && normalized.length >= 3) {
+    return prefixMatches[0];
   }
 
   return null;
-}
-
-function answerQuestionFromInput(rawValue) {
-  const question = state.session.currentQuestion;
-  if (!question || state.session.lastResult) {
-    return;
-  }
-
-  const resolvedItem = resolveAnswerInput(rawValue, question.promptType);
-  if (!resolvedItem) {
-    state.session.answerDraft = rawValue;
-    state.session.inputError =
-      "Réponse non reconnue. Commence à taper puis choisis une autocomplétion proposée.";
-    render();
-    return;
-  }
-
-  answerQuestion(resolvedItem.id, rawValue);
-}
-
-function answerQuestion(selectedId, rawValue = "") {
-  const question = state.session.currentQuestion;
-  if (!question || state.session.lastResult) {
-    return;
-  }
-
-  const correctId = question.correctId;
-  const isCorrect = selectedId === correctId;
-
-  if (isCorrect) {
-    state.stats[correctId].correct += 1;
-  } else {
-    state.stats[correctId].falseNegatives += 1;
-    state.stats[selectedId].falsePositives += 1;
-    state.session.focusBoosts[correctId] =
-      (state.session.focusBoosts[correctId] || 0) + 1.8;
-    state.session.focusBoosts[selectedId] =
-      (state.session.focusBoosts[selectedId] || 0) + 0.9;
-  }
-
-  state.session.answeredCount += 1;
-  state.session.answerDraft = "";
-  state.session.inputError = "";
-  state.session.lastResult = {
-    selectedId,
-    isCorrect,
-    rawValue: rawValue.trim(),
-  };
-  persistState();
-  render();
-}
-
-function goToNextQuestion() {
-  const currentId = state.session.currentQuestion?.id || null;
-  decayFocusBoosts();
-  state.session.currentQuestion = buildQuestion(currentId);
-  state.session.lastResult = null;
-  state.session.answerDraft = "";
-  state.session.inputError = "";
-  render();
 }
 
 function getAutocompleteSuggestions(promptType, query) {
@@ -1121,14 +485,13 @@ function getAutocompleteSuggestions(promptType, query) {
     return [];
   }
 
-  return getItemsByCategory(promptType)
+  return getActiveItemsByCategory(promptType)
     .map((item) => {
       const labelScore = normalizeText(item.label).startsWith(normalizedQuery) ? 0 : 1;
       const aliasScore = item.searchKeys.some((key) => key.startsWith(normalizedQuery)) ? 0 : 1;
-      const activityScore = state.activeIds.includes(item.id) ? 0 : 1;
       return {
         item,
-        score: labelScore * 10 + aliasScore * 5 + activityScore,
+        score: labelScore * 10 + aliasScore * 5,
       };
     })
     .filter(({ item }) =>
@@ -1146,596 +509,66 @@ function getAutocompleteSuggestions(promptType, query) {
     .map(({ item }) => item);
 }
 
-function getFunctionAutocompleteHelp() {
-  return "Abréviations acceptées : COD, COI, CCT, CCL, CCM, CDN, PSR.";
+function answerQuestionFromInput(rawValue) {
+  const question = state.currentQuestion;
+  if (!question || state.lastResult) {
+    return;
+  }
+
+  const resolvedItem = resolveAnswerInput(rawValue, question.promptType);
+  if (!resolvedItem) {
+    state.answerDraft = rawValue;
+    state.inputError =
+      "Réponse non reconnue. Commence à taper puis choisis une suggestion.";
+    render();
+    return;
+  }
+
+  answerQuestion(resolvedItem.id, rawValue);
 }
 
-function renderWelcomePanel() {
-  if (hasStoredProfile()) {
-    dom.welcomePanel.classList.remove("is-visible");
-    dom.welcomePanel.innerHTML = "";
+function answerQuestion(selectedId, rawValue = "") {
+  const question = state.currentQuestion;
+  if (!question || state.lastResult) {
     return;
   }
 
-  dom.welcomePanel.classList.add("is-visible");
-  dom.welcomePanel.innerHTML = `
-    <div class="welcome-grid">
-      <div class="welcome-copy">
-        <p class="eyebrow">Première ouverture</p>
-        <h2>Crée un profil pour commencer à t'entraîner</h2>
-        <p>
-          L'application garde en mémoire les catégories actives, les bonnes
-          réponses, les faux positifs et les faux négatifs. L'entraînement
-          accentue ensuite les notions les plus fragiles.
-        </p>
-        <div class="chip-row">
-          <span class="chip-button">${itemCounts.nature} natures</span>
-          <span class="chip-button">${itemCounts.fonction} fonctions</span>
-          <span class="chip-button">réponse libre avec autocomplétion</span>
-        </div>
-      </div>
+  clearAutoAdvance();
 
-      <form class="welcome-form" id="profile-form">
-        <div>
-          <label for="profile-name">Nom du profil</label>
-          <input
-            class="text-input"
-            id="profile-name"
-            name="profileName"
-            type="text"
-            maxlength="40"
-            placeholder="Par exemple : Élève 1"
-            required
-          />
-        </div>
+  const correctId = question.correctId;
+  const isCorrect = selectedId === correctId;
 
-        <button class="primary-button" type="submit">Créer mon profil</button>
-        <p class="muted">
-          Tu pourras activer ou désactiver les catégories à travailler, puis
-          réinitialiser toute la progression plus tard.
-        </p>
-      </form>
-    </div>
-  `;
+  if (isCorrect) {
+    state.stats[correctId].correct += 1;
+  } else {
+    state.stats[correctId].falseNegatives += 1;
+    state.stats[selectedId].falsePositives += 1;
+    state.focusBoosts[correctId] = (state.focusBoosts[correctId] || 0) + 1.8;
+    state.focusBoosts[selectedId] = (state.focusBoosts[selectedId] || 0) + 0.9;
+  }
 
-  const form = document.getElementById("profile-form");
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    const profileName = String(formData.get("profileName") || "").trim();
-    if (!profileName) {
-      return;
-    }
-    createProfile(profileName);
-  });
+  state.answeredCount += 1;
+  state.answerDraft = "";
+  state.inputError = "";
+  state.lastResult = {
+    isCorrect,
+    selectedId,
+    rawValue: rawValue.trim(),
+  };
+  persistState();
+  render();
+  scheduleNextQuestion();
 }
 
-function renderProfileView() {
-  const weakestItems = getWeakestActiveItems(3);
-  const priorityIds = new Set(weakestItems.map((item) => item.id));
-
-  if (!hasOpenProfile()) {
-    dom.profileView.classList.remove("is-visible");
-    dom.profileView.innerHTML = "";
-    return;
-  }
-
-  const totalCorrect = sumStats("correct");
-  const totalMistakes = sumStats("falseNegatives");
-  const totalFalsePositives = sumStats("falsePositives");
-
-  dom.profileView.classList.toggle("is-visible", getResolvedView() === "profile");
-  dom.profileView.innerHTML = `
-    <div class="profile-grid">
-      <div class="stack">
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="profile-name">Profil actif <strong>${escapeHtml(state.profileName)}</strong></p>
-              <h2>Tableau de bord</h2>
-            </div>
-            <span class="pill">Progression locale</span>
-          </div>
-          <p class="panel-subtitle">
-            Les statistiques sont enregistrées dans ce navigateur. Tu peux
-            ajuster les catégories actives à tout moment avant de lancer un
-            entraînement.
-          </p>
-
-          <div class="summary-grid">
-            <div class="summary-card">
-              <span class="metric-label">Catégories actives</span>
-              <strong>${state.activeIds.length}</strong>
-              <p>sur ${grammarItems.length} disponibles</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Bonnes réponses</span>
-              <strong>${totalCorrect}</strong>
-              <p>réponses validées</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Erreurs repérées</span>
-              <strong>${totalMistakes + totalFalsePositives}</strong>
-              <p>${totalMistakes} faux négatifs, ${totalFalsePositives} faux positifs</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Priorités</p>
-              <h3>Points faibles actifs</h3>
-            </div>
-            <button class="secondary-button" id="open-training" type="button" ${
-              state.activeIds.length ? "" : "disabled"
-            }>
-              S'entraîner
-            </button>
-          </div>
-
-          ${
-            weakestItems.length
-              ? `<div class="focus-grid">
-                  ${weakestItems
-                    .map((item) => {
-                      const score = getMastery(item.id);
-                      return `
-                        <div class="focus-item">
-                          <span class="pill ${item.category === "fonction" ? "function" : ""}">${item.category}</span>
-                          <h3>${escapeHtml(item.label)}</h3>
-                          <p class="weakness">Maîtrise estimée : ${score}%</p>
-                        </div>
-                      `;
-                    })
-                    .join("")}
-                </div>`
-              : `<div class="empty-state">
-                  Active au moins une nature ou une fonction pour faire apparaître
-                  des priorités d'entraînement.
-                </div>`
-          }
-        </article>
-
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Actions</p>
-              <h3>Gestion du profil</h3>
-            </div>
-          </div>
-          <div class="toolbar">
-            <button class="secondary-button" id="reset-profile" type="button">
-              Réinitialiser la progression
-            </button>
-          </div>
-        </article>
-      </div>
-
-      <article class="panel">
-        <div class="training-topline">
-          <div>
-            <p class="section-label">Natures et fonctions</p>
-            <h2>Sélection des catégories actives</h2>
-          </div>
-          <span class="pill">Coche pour entraîner</span>
-        </div>
-        <p class="panel-subtitle">
-          Chaque fiche affiche les faux positifs, les faux négatifs et un taux
-          de maîtrise simple pour te donner une vue d'ensemble.
-        </p>
-
-        <div class="grammar-grid">
-          ${grammarItems
-            .map((item) => {
-              const stats = state.stats[item.id];
-              const mastery = getMastery(item.id);
-              const checked = state.activeIds.includes(item.id);
-              return `
-                <article class="grammar-card ${priorityIds.has(item.id) ? "is-priority" : ""}">
-                  <div class="grammar-card-header">
-                    <div>
-                      <span class="pill ${item.category === "fonction" ? "function" : ""}">
-                        ${item.category}
-                      </span>
-                      <h3>${escapeHtml(item.label)}</h3>
-                    </div>
-                    <label class="toggle" aria-label="Activer ${escapeHtml(item.label)}">
-                      <input type="checkbox" data-toggle-id="${item.id}" ${checked ? "checked" : ""} />
-                      <span></span>
-                    </label>
-                  </div>
-
-                  <div class="stats-grid">
-                    <div class="stats-card">
-                      <span class="metric-label">Bonnes réponses</span>
-                      <strong>${stats.correct}</strong>
-                    </div>
-                    <div class="stats-card">
-                      <span class="metric-label">Maîtrise</span>
-                      <strong>${mastery}%</strong>
-                    </div>
-                    <div class="stats-card">
-                      <span class="metric-label">Faux positifs</span>
-                      <strong>${stats.falsePositives}</strong>
-                    </div>
-                    <div class="stats-card">
-                      <span class="metric-label">Faux négatifs</span>
-                      <strong>${stats.falseNegatives}</strong>
-                    </div>
-                  </div>
-                </article>
-              `;
-            })
-            .join("")}
-        </div>
-      </article>
-    </div>
-  `;
-
-  const openTrainingButton = document.getElementById("open-training");
-  const resetProfileButton = document.getElementById("reset-profile");
-
-  openTrainingButton?.addEventListener("click", () => switchView("training"));
-  resetProfileButton?.addEventListener("click", () => resetProfile());
-
-  dom.profileView.querySelectorAll("[data-toggle-id]").forEach((checkbox) => {
-    checkbox.addEventListener("change", (event) => {
-      const target = event.currentTarget;
-      toggleActive(target.dataset.toggleId);
-    });
-  });
-}
-
-function renderTrainingView() {
-  if (!hasOpenProfile()) {
-    dom.trainingView.classList.remove("is-visible");
-    dom.trainingView.innerHTML = "";
-    return;
-  }
-
-  ensureQuestion();
-  const question = state.session.currentQuestion;
-  const result = state.session.lastResult;
-  const weakestItems = getWeakestActiveItems(4);
-
-  dom.trainingView.classList.toggle("is-visible", getResolvedView() === "training");
-
-  if (!state.activeIds.length) {
-    dom.trainingView.innerHTML = `
-      <div class="panel empty-state">
-        <h2>Aucune catégorie active</h2>
-        <p>
-          Retourne au profil pour cocher au moins une nature ou une fonction,
-          puis relance l'entraînement.
-        </p>
-        <button class="primary-button" id="back-to-profile" type="button">
-          Retour au profil
-        </button>
-      </div>
-    `;
-
-    document.getElementById("back-to-profile")?.addEventListener("click", () => {
-      switchView("profile");
-    });
-    return;
-  }
-
-  const previewQueue = buildPreviewQueue(question?.id);
-  const correctItem = question ? getItem(question.correctId) : null;
-  const selectedItem = result ? getItem(result.selectedId) : null;
-
-  dom.trainingView.innerHTML = `
-    <div class="training-grid">
-      <div class="stack">
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Session</p>
-              <h2>${escapeHtml(state.profileName)}</h2>
-            </div>
-            <button class="secondary-button" id="go-profile" type="button">
-              Retour au profil
-            </button>
-          </div>
-
-          <div class="summary-grid">
-            <div class="summary-card">
-              <span class="metric-label">Questions jouées</span>
-              <strong>${state.session.answeredCount}</strong>
-              <p>dans cette session</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Catégories actives</span>
-              <strong>${state.activeIds.length}</strong>
-              <p>sélectionnées actuellement</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Bonnes réponses</span>
-              <strong>${sumStats("correct")}</strong>
-              <p>cumul global du profil</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Accent d'entraînement</p>
-              <h3>Catégories à retravailler</h3>
-            </div>
-          </div>
-          <div class="focus-grid">
-            ${weakestItems
-              .map(
-                (item) => `
-                  <div class="focus-item">
-                    <span class="pill ${item.category === "fonction" ? "function" : ""}">
-                      ${item.category}
-                    </span>
-                    <h3>${escapeHtml(item.label)}</h3>
-                    <p class="weakness">Maîtrise : ${getMastery(item.id)}%</p>
-                  </div>
-                `,
-              )
-              .join("")}
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Ensuite</p>
-              <h3>Phrases à venir</h3>
-            </div>
-          </div>
-          <div class="upcoming-list">
-            ${previewQueue
-              .map(
-                (preview) => `
-                  <div class="upcoming-item">
-                    <div>
-                      <strong>${promptLabels[preview.promptType]}</strong>
-                      <small>${escapeHtml(preview.before)}${escapeHtml(preview.target)}${escapeHtml(preview.after)}</small>
-                    </div>
-                    <span class="pill ${preview.promptType === "fonction" ? "function" : ""}">
-                      ${preview.promptType}
-                    </span>
-                  </div>
-                `,
-              )
-              .join("")}
-          </div>
-        </article>
-      </div>
-
-      <article class="question-card">
-        ${
-          question
-            ? `
-              <div class="question-header">
-                <div>
-                  <p class="question-prompt">${promptLabels[question.promptType]}</p>
-                  <h2>${question.promptType === "nature" ? "Écris la nature" : "Écris la fonction"}</h2>
-                </div>
-                <span class="question-pill">réponse libre</span>
-              </div>
-
-              <p class="sentence">
-                ${escapeHtml(question.before)}<span class="target">${escapeHtml(question.target)}</span>${escapeHtml(question.after)}
-              </p>
-
-              <form class="answer-form" id="answer-form">
-                <label class="metric-label" for="answer-input">
-                  ${question.promptType === "nature" ? "Ta nature grammaticale" : "Ta fonction grammaticale"}
-                </label>
-                <div class="input-shell">
-                  <input
-                    class="answer-input"
-                    id="answer-input"
-                    type="text"
-                    autocomplete="off"
-                    spellcheck="false"
-                    placeholder="${question.promptType === "nature" ? "Ex. adjectif, pronom..." : "Ex. COD, CCT, complément du nom..."}"
-                    value="${escapeHtml(state.session.answerDraft)}"
-                    ${result ? "disabled" : ""}
-                  />
-                  <div class="autocomplete-panel" id="autocomplete-panel"></div>
-                </div>
-                <p class="answer-help">
-                  Commence à taper pour afficher des autocomplétions.
-                  ${question.promptType === "fonction" ? getFunctionAutocompleteHelp() : ""}
-                </p>
-                <p class="answer-error" id="answer-input-error" ${state.session.inputError ? "" : "hidden"}>
-                  ${escapeHtml(state.session.inputError)}
-                </p>
-                ${
-                  result
-                    ? ""
-                    : `
-                      <div class="answer-actions">
-                        <button class="primary-button" type="submit">Valider</button>
-                      </div>
-                    `
-                }
-              </form>
-
-              ${
-                result
-                  ? `
-                    <div class="result-banner ${result.isCorrect ? "is-success" : "is-error"}">
-                      <div>
-                        <strong>${result.isCorrect ? "Bonne réponse." : "Ce n'était pas la bonne réponse."}</strong>
-                        <p class="muted">
-                          ${
-                            result.isCorrect
-                              ? `Réponse validée : ${escapeHtml(correctItem.label)}.`
-                              : `Tu as répondu : ${escapeHtml(selectedItem.label)}. Réponse attendue : ${escapeHtml(correctItem.label)}.`
-                          }
-                        </p>
-                        <p class="muted">${escapeHtml(question.explanation)}</p>
-                      </div>
-                      <button class="primary-button" id="next-question" type="button">
-                        Phrase suivante
-                      </button>
-                    </div>
-                  `
-                  : ""
-              }
-            `
-            : `
-              <div class="empty-state">
-                <h2>Pas de question disponible</h2>
-                <p>
-                  Vérifie que certaines catégories sont actives dans le profil.
-                </p>
-              </div>
-            `
-        }
-      </article>
-    </div>
-  `;
-
-  document.getElementById("go-profile")?.addEventListener("click", () => {
-    switchView("profile");
-  });
-
-  if (question && !result) {
-    initializeAutocomplete(question.promptType);
-    document.getElementById("answer-form")?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const input = document.getElementById("answer-input");
-      answerQuestionFromInput(input?.value || "");
-    });
-  }
-
-  document.getElementById("next-question")?.addEventListener("click", () => {
-    goToNextQuestion();
-  });
-}
-
-function renderSessionView() {
-  if (!hasStoredProfile()) {
-    dom.sessionView.classList.remove("is-visible");
-    dom.sessionView.innerHTML = "";
-    return;
-  }
-
-  const resolvedView = getResolvedView();
-  const totalCorrect = sumStats("correct");
-  const totalMistakes = sumStats("falseNegatives");
-  const totalFalsePositives = sumStats("falsePositives");
-
-  dom.sessionView.classList.toggle("is-visible", resolvedView === "session");
-  dom.sessionView.innerHTML = `
-    <div class="session-grid">
-      <div class="stack">
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Session du profil</p>
-              <h2>${escapeHtml(state.profileName)}</h2>
-            </div>
-            <span class="status-pill ${hasOpenProfile() ? "is-open" : "is-closed"}">
-              ${hasOpenProfile() ? "Profil ouvert" : "Profil fermé"}
-            </span>
-          </div>
-          <p class="panel-subtitle">
-            ${hasOpenProfile()
-              ? "Tu peux quitter ce profil sans perdre aucune statistique. Tu pourras le rouvrir plus tard."
-              : "Ce profil est enregistré sur cet appareil mais il n'est pas ouvert pour l'instant."}
-          </p>
-
-          <div class="summary-grid">
-            <div class="summary-card">
-              <span class="metric-label">Catégories actives</span>
-              <strong>${state.activeIds.length}</strong>
-              <p>sur ${grammarItems.length} disponibles</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Bonnes réponses</span>
-              <strong>${totalCorrect}</strong>
-              <p>réponses validées</p>
-            </div>
-            <div class="summary-card">
-              <span class="metric-label">Erreurs repérées</span>
-              <strong>${totalMistakes + totalFalsePositives}</strong>
-              <p>${totalMistakes} faux négatifs, ${totalFalsePositives} faux positifs</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="training-topline">
-            <div>
-              <p class="section-label">Accès</p>
-              <h3>${hasOpenProfile() ? "Sortir du profil" : "Rentrer dans le profil"}</h3>
-            </div>
-          </div>
-
-          <div class="session-actions">
-            <div class="action-block">
-              <strong>${hasOpenProfile() ? "Sortie sans suppression" : "Réouverture du profil"}</strong>
-              <p class="muted">
-                ${hasOpenProfile()
-                  ? "La progression reste enregistrée localement. Tu fermes seulement la session actuelle."
-                  : "Tu retrouves immédiatement le tableau de bord, les catégories actives et toute la progression enregistrée."}
-              </p>
-              <div class="toolbar">
-                <button class="primary-button" id="${hasOpenProfile() ? "exit-profile" : "enter-profile"}" type="button">
-                  ${hasOpenProfile() ? "Sortir du profil" : "Rentrer dans le profil"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <article class="panel danger-panel">
-        <div class="training-topline">
-          <div>
-            <p class="section-label">Suppression</p>
-            <h2>Supprimer ce profil</h2>
-          </div>
-          <span class="pill">Action locale</span>
-        </div>
-        <p class="panel-subtitle">
-          Cette action efface le nom du profil, les statistiques, les catégories
-          actives et l'historique enregistrés dans ce navigateur.
-        </p>
-
-        <div class="action-block">
-          <strong>Effacement complet</strong>
-          <p class="muted">
-            Utilise cette option seulement si tu veux repartir de zéro et créer
-            un nouveau profil.
-          </p>
-          <div class="toolbar">
-            <button class="danger-button" id="delete-profile" type="button">
-              Supprimer le profil
-            </button>
-          </div>
-        </div>
-      </article>
-    </div>
-  `;
-
-  document.getElementById("enter-profile")?.addEventListener("click", () => {
-    enterProfile();
-  });
-
-  document.getElementById("exit-profile")?.addEventListener("click", () => {
-    exitProfile();
-  });
-
-  document.getElementById("delete-profile")?.addEventListener("click", () => {
-    const confirmed = window.confirm(
-      "Supprimer ce profil et toute sa progression locale ?",
-    );
-    if (confirmed) {
-      deleteProfile();
-    }
-  });
+function goToNextQuestion() {
+  clearAutoAdvance();
+  const currentId = state.currentQuestion?.id || null;
+  decayFocusBoosts();
+  state.currentQuestion = buildQuestion(currentId);
+  state.lastResult = null;
+  state.answerDraft = "";
+  state.inputError = "";
+  render();
 }
 
 function initializeAutocomplete(promptType) {
@@ -1789,6 +622,7 @@ function initializeAutocomplete(promptType) {
     }
     renderSuggestions();
   });
+
   input.addEventListener("focus", renderSuggestions);
 
   requestAnimationFrame(() => {
@@ -1798,44 +632,123 @@ function initializeAutocomplete(promptType) {
   });
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function bindNavigation() {
-  dom.navButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const targetView = button.dataset.nav;
-      if (!canAccessView(targetView)) {
-        return;
-      }
-      switchView(targetView);
-    });
-  });
-}
-
-function renderNavigation() {
-  const resolvedView = getResolvedView();
-  dom.navButtons.forEach((button) => {
-    const view = button.dataset.nav;
-    const isActive = view === resolvedView;
-    button.classList.toggle("is-active", isActive);
-    button.disabled = !canAccessView(view);
-  });
+function renderEmptyState() {
+  appRoot.innerHTML = `
+    <section class="training-card empty-state">
+      <p class="eyebrow">Configuration</p>
+      <h2>Aucune notion active</h2>
+      <p class="support-copy">
+        Vérifie le fichier <code>config.js</code> et ajoute au moins une notion
+        grammaticale active pour entraîner le site.
+      </p>
+    </section>
+  `;
 }
 
 function render() {
-  renderNavigation();
-  renderWelcomePanel();
-  renderProfileView();
-  renderTrainingView();
-  renderSessionView();
+  ensureQuestion();
+
+  if (!getActiveExercises().length || !state.currentQuestion) {
+    renderEmptyState();
+    return;
+  }
+
+  const question = state.currentQuestion;
+  const result = state.lastResult;
+  const correctItem = getItem(question.correctId);
+  const selectedItem = result ? getItem(result.selectedId) : null;
+  const activeCount = configuredActiveIds.length;
+
+  appRoot.innerHTML = `
+    <section class="training-card">
+      <div class="card-topline">
+        <div>
+          <p class="eyebrow">Entraînement local</p>
+          <h2>${promptLabels[question.promptType]}</h2>
+        </div>
+        <span class="status-pill">${activeCount} notions actives</span>
+      </div>
+
+      <p class="sentence">
+        ${escapeHtml(question.before)}<span class="target">${escapeHtml(question.target)}</span>${escapeHtml(question.after)}
+      </p>
+
+      <form class="answer-form" id="answer-form">
+        <label class="metric-label" for="answer-input">
+          ${question.promptType === "nature" ? "Écris la nature grammaticale" : "Écris la fonction grammaticale"}
+        </label>
+
+        <div class="input-shell">
+          <input
+            class="answer-input"
+            id="answer-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="${question.promptType === "nature" ? "Ex. adjectif, pronom..." : "Ex. COD, complément du nom, CCT..."}"
+            value="${escapeHtml(state.answerDraft)}"
+            ${result ? "disabled" : ""}
+          />
+          <div class="autocomplete-panel" id="autocomplete-panel"></div>
+        </div>
+
+        <p class="answer-help">
+          Les scores restent sur ce navigateur uniquement et servent à choisir
+          les prochaines questions.
+        </p>
+
+        <p class="answer-error" id="answer-input-error" ${state.inputError ? "" : "hidden"}>
+          ${escapeHtml(state.inputError)}
+        </p>
+
+        ${
+          result
+            ? ""
+            : `
+              <div class="answer-actions">
+                <button class="primary-button" type="submit">Valider</button>
+              </div>
+            `
+        }
+      </form>
+
+      ${
+        result
+          ? `
+            <div class="result-banner ${result.isCorrect ? "is-success" : "is-error"}">
+              <div>
+                <strong>${result.isCorrect ? "Vrai" : "Faux"}</strong>
+                <p class="muted">
+                  ${
+                    result.isCorrect
+                      ? `Réponse validée : ${escapeHtml(correctItem.label)}.`
+                      : `Tu as répondu : ${escapeHtml(selectedItem.label)}. Réponse attendue : ${escapeHtml(correctItem.label)}.`
+                  }
+                </p>
+                <p class="muted">${escapeHtml(question.explanation)}</p>
+              </div>
+              <button class="secondary-button" id="next-question" type="button">
+                Question suivante
+              </button>
+            </div>
+          `
+          : ""
+      }
+    </section>
+  `;
+
+  if (!result) {
+    initializeAutocomplete(question.promptType);
+    document.getElementById("answer-form")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = document.getElementById("answer-input");
+      answerQuestionFromInput(input?.value || "");
+    });
+  }
+
+  document.getElementById("next-question")?.addEventListener("click", () => {
+    goToNextQuestion();
+  });
 }
 
-bindNavigation();
 render();

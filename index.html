@@ -10,34 +10,22 @@
     <div class="page-glow page-glow-left"></div>
     <div class="page-glow page-glow-right"></div>
 
-    <div class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Grammaire française</p>
-          <h1>Atelier Grammaire</h1>
-        </div>
-
-        <nav class="topbar-actions" aria-label="Navigation principale">
-          <button class="nav-button" data-nav="profile" type="button">
-            Profil
-          </button>
-          <button class="nav-button" data-nav="training" type="button">
-            S'entraîner
-          </button>
-          <button class="nav-button" data-nav="session" type="button">
-            Session
-          </button>
-        </nav>
+    <main class="app-shell">
+      <header class="hero">
+        <p class="eyebrow">Grammaire française</p>
+        <h1>Atelier Grammaire</h1>
+        <p class="hero-copy">
+          Une seule interface d'entraînement, avec autocomplétion et stockage
+          local des scores dans le navigateur.
+        </p>
       </header>
 
-      <main class="layout">
-        <section class="welcome-panel" id="welcome-panel"></section>
-        <section class="view profile-view" id="profile-view"></section>
-        <section class="view training-view" id="training-view"></section>
-        <section class="view session-view" id="session-view"></section>
-      </main>
-    </div>
+      <section class="layout">
+        <div id="training-app"></div>
+      </section>
+    </main>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
