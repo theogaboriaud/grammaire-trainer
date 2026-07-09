@@ -210,7 +210,6 @@ const exerciseBank = [
 
 const appRoot = document.getElementById("training-app");
 const answerLookup = new Map();
-let autoAdvanceHandle = null;
 
 for (const item of grammarItems) {
   for (const key of item.searchKeys) {
@@ -434,20 +433,6 @@ function decayFocusBoosts() {
   }
 }
 
-function clearAutoAdvance() {
-  if (autoAdvanceHandle) {
-    window.clearTimeout(autoAdvanceHandle);
-    autoAdvanceHandle = null;
-  }
-}
-
-function scheduleNextQuestion() {
-  clearAutoAdvance();
-  autoAdvanceHandle = window.setTimeout(() => {
-    goToNextQuestion();
-  }, 2200);
-}
-
 function resolveAnswerInput(rawValue, promptType) {
   const normalized = normalizeText(rawValue);
   if (!normalized) {
@@ -533,8 +518,6 @@ function answerQuestion(selectedId, rawValue = "") {
     return;
   }
 
-  clearAutoAdvance();
-
   const correctId = question.correctId;
   const isCorrect = selectedId === correctId;
 
@@ -557,11 +540,9 @@ function answerQuestion(selectedId, rawValue = "") {
   };
   persistState();
   render();
-  scheduleNextQuestion();
 }
 
 function goToNextQuestion() {
-  clearAutoAdvance();
   const currentId = state.currentQuestion?.id || null;
   decayFocusBoosts();
   state.currentQuestion = buildQuestion(currentId);
