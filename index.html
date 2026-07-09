@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atelier Grammaire</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Grammaire française</p>
+          <h1>Atelier Grammaire</h1>
+        </div>
+
+        <nav class="topbar-actions" aria-label="Navigation principale">
+          <button class="nav-button" data-nav="profile" type="button">
+            Profil
+          </button>
+          <button class="nav-button" data-nav="training" type="button">
+            S'entraîner
+          </button>
+          <button class="nav-button" data-nav="session" type="button">
+            Session
+          </button>
+        </nav>
+      </header>
+
+      <main class="layout">
+        <section class="welcome-panel" id="welcome-panel"></section>
+        <section class="view profile-view" id="profile-view"></section>
+        <section class="view training-view" id="training-view"></section>
+        <section class="view session-view" id="session-view"></section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
